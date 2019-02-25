@@ -11,8 +11,10 @@ import os
 
 import os
 
-SECRET_KEY = os.environ.get('IN_CONTAINER', False)
 
+### Check if inside of container, variable is set in Dockerfile
+SECRET_KEY = os.environ.get('IN_CONTAINER', False)
+### Probably a better way, mount fs
 if SECRET_KEY:
     os.system("/bin/mount -t cifs //mediacenter/Temp /tmp/media -o username=tv,password=")
 
@@ -27,6 +29,7 @@ r=requests.get(line)
 weather = json.loads(r.text)    
 
 temp = weather['observation']['temp']
+### Stringafy for write to file later
 temp = str(temp)
 rh = weather['observation']['rh']
 rh = str(rh)+"%"
