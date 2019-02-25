@@ -10,8 +10,11 @@ import os
 #https://console.bluemix.net/catalog/services/weather-company-data
 
 import os
-if (os.name == "posix"):
-        os.system("/bin/mount -t cifs //mediacenter/Temp /tmp/media -o username=tv,password=")
+
+SECRET_KEY = os.environ.get('IN_CONTAINER', False)
+
+if SECRET_KEY:
+    os.system("/bin/mount -t cifs //mediacenter/Temp /tmp/media -o username=tv,password=")
 
 username = credentials.login['username']
 password = credentials.login['password']
@@ -24,15 +27,30 @@ r=requests.get(line)
 weather = json.loads(r.text)    
 
 temp = weather['observation']['temp']
+temp = str(temp)
 rh = weather['observation']['rh']
+rh = str(rh)+"%"
 feels_like = weather['observation']['feels_like']
+feels_like = str(feels_like)
+dual_temp = temp+"/"+feels_like
 icon = weather['observation']['wx_icon']
 url='https://raw.githubusercontent.com/ibm-watson-data-lab/python-notebooks/master/weathericons/icon'+str(int(icon))+'.png'
 
+with open('CurrHumidity.txt', "w") as file:
+    file.write(rh)
 
-with open('icon.png', "wb") as file:
-        response = requests.get(url)
-        file.write(response.content)
+if SECRET_KEY:
+    with open('/tmp/media/icon.png', "wb") as file:
+         response = requests.get(url)
+         file.write(response.content)
+
+if SECRET_KEY:
+    with open('/tmp/media/CurrTemp.txt', "w") as file:
+         file.write(str(dual_temp))
+
+if SECRET_KEY:
+    with open('/tmp/media/CurrHumidity.txt', "w") as file:
+         file.write(rh)
 
 
 print(temp, end ="")

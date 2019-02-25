@@ -6,6 +6,8 @@ COPY mount_mediacenter.sh /
 
 ADD get_current_weather.py /
 
+ENV IN_CONTAINER YES
+
 RUN pip install -r requirements.txt
 RUN apt-get update && apt-get install -y cifs-utils && apt-get clean
 RUN mkdir /tmp/media
