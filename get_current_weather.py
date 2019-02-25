@@ -1,12 +1,18 @@
 import requests
 import json
 import credentials
+import os
 #import urllib.request
 #from PIL import Image
 #from io import BytesIO
 #import StringIO
 #https://developer.ibm.com/clouddataservices/2016/10/06/your-own-weather-forecast-in-a-python-notebook/
 #https://console.bluemix.net/catalog/services/weather-company-data
+
+import os
+if (os.name == "posix"):
+        os.system("/bin/mount -t cifs //mediacenter/Temp /tmp/media -o username=tv,password=")
+
 username = credentials.login['username']
 password = credentials.login['password']
 # Request forecast for Home in Eagle Creek
